@@ -211,6 +211,8 @@ namespace Wacki {
 
 
                 if(controller.ButtonUp()) {
+                    ClearSelection();
+
                     if(data.currentDragging != null) {
                         data.pointerEvent.current = data.currentDragging;
                         ExecuteEvents.Execute(data.currentDragging, data.pointerEvent, ExecuteEvents.endDragHandler);
@@ -221,6 +223,7 @@ namespace Wacki {
                         data.pointerEvent.pointerDrag = null;
                         data.currentDragging = null;
                     }
+
                     if(data.currentPressed) {
                         data.pointerEvent.current = data.currentPressed;
                         ExecuteEvents.Execute(data.currentPressed, data.pointerEvent, ExecuteEvents.pointerUpHandler);
