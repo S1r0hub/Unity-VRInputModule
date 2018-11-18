@@ -192,7 +192,6 @@ namespace Wacki {
                             // reason to do this is head tracking might be jittery and this makes it easier to click buttons
                             ExecuteEvents.Execute(newPressed, data.pointerEvent, ExecuteEvents.pointerClickHandler);
                             ExecuteEvents.Execute(controller.gameObject, data.pointerEvent, ExecuteEvents.pointerClickHandler);
-
                         }
 
                         if (newPressed != null) {
@@ -202,7 +201,7 @@ namespace Wacki {
                         }
 
                         ExecuteEvents.Execute(data.currentPressed, data.pointerEvent, ExecuteEvents.beginDragHandler);
-                        ExecuteEvents.Execute(controller.gameObject, data.pointerEvent, ExecuteEvents.beginDragHandler);
+                        ExecuteEvents.Execute(controller.gameObject, data.pointerEvent, ExecuteEvents.beginDragHandler); 
 
                         data.pointerEvent.pointerDrag = data.currentPressed;
                         data.currentDragging = data.currentPressed;

@@ -30,7 +30,7 @@ public class FaceCamera : MonoBehaviour {
         // use lookAt or alternative transform
         Transform lookingAt = lookAt;
         if (!lookingAt || !lookAt.gameObject.activeInHierarchy) { lookingAt = lookAtAlternative; }
-        if (!lookingAt.gameObject.activeInHierarchy) { return; }
+        if (!lookingAt || !lookingAt.gameObject.activeInHierarchy) { return; }
 
         Vector3 v = lookingAt.transform.position - transform.position;
         v.x = v.z = 0;
