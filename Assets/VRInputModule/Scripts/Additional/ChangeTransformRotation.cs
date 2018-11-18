@@ -10,6 +10,8 @@ using UnityEngine.UI;
  * according to the slider value. This results in a change of the suns position.
  * 
  * Attach it to the directional light so that it can access its Transform component.
+ * 
+ * Author: github.com/S1r0hub
  */
 public class ChangeTransformRotation : MonoBehaviour {
 

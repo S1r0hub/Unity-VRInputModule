@@ -4,8 +4,8 @@ using Valve.VR.InteractionSystem;
 
 
 /**
- * Code modified by S1r0hub.
  * Initial code by Wacki.
+ * Code modified by S1r0hub (11.2018)
  */
 namespace Wacki {
 

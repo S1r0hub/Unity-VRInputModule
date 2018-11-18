@@ -5,7 +5,10 @@ using System.Collections.Generic;
 /**
  * Hint:
  * If this is not working at all (e.g. the Process function is not called)
- * ensure that you have disabled the SteamVR Player Prefab "Input Module"!
+ * ensure that you have only one "EventSystem" component in the scene!
+ * 
+ * Code by Wacki
+ * Modified by S1r0hub (11.2018)
  */
 namespace Wacki {
 
@@ -111,6 +114,10 @@ namespace Wacki {
             foreach(var pair in _controllerData) {
                 IUILaserPointer controller = pair.Key;
                 ControllerData data = pair.Value;
+
+                // skip raycasting and events in general
+                // if the layer is currently not enabled
+                if (!controller.isLaserActive()) { continue; }
 
                 // Test if UICamera is looking at a GUI element
                 UpdateCameraPosition(controller);
