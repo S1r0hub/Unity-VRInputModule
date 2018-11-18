@@ -19,11 +19,10 @@ namespace Wacki {
             public GameObject currentDragging;
         };
 
-
-
         private Camera UICamera;
         private PhysicsRaycaster raycaster;
         private HashSet<IUILaserPointer> _controllers;
+
         // controller data
         private Dictionary<IUILaserPointer, ControllerData> _controllerData = new Dictionary<IUILaserPointer, ControllerData>();
 
@@ -45,6 +44,7 @@ namespace Wacki {
             
             // Create a new camera that will be used for raycasts
             UICamera = new GameObject("UI Camera").AddComponent<Camera>();
+
             // Added PhysicsRaycaster so that pointer events are sent to 3d objects
             raycaster = UICamera.gameObject.AddComponent<PhysicsRaycaster>();
             UICamera.clearFlags = CameraClearFlags.Nothing;
@@ -63,6 +63,7 @@ namespace Wacki {
         public void AddController(IUILaserPointer controller)
         {
             _controllerData.Add(controller, new ControllerData());
+            Debug.Log("Laser pointer registered!");
         }
 
         public void RemoveController(IUILaserPointer controller)

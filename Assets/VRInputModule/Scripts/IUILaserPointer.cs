@@ -11,13 +11,15 @@ namespace Wacki {
 
         private GameObject hitPoint;
         private GameObject pointer;
-
+        private bool laserActive = false;
 
         private float _distanceLimit;
 
         // Use this for initialization
         void Start()
         {
+            laserActive = laserAlwaysOn;
+
             // todo:    let the user choose a mesh for laser pointer ray and hit point
             //          or maybe abstract the whole menu control some more and make the 
             //          laser pointer a module.
@@ -25,12 +27,12 @@ namespace Wacki {
             pointer.transform.SetParent(transform, false);
             pointer.transform.localScale = new Vector3(laserThickness, laserThickness, 100.0f);
             pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 50.0f);
+            pointer.SetActive(laserActive);
 
             hitPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             hitPoint.transform.SetParent(transform, false);
             hitPoint.transform.localScale = new Vector3(laserHitScale, laserHitScale, laserHitScale);
             hitPoint.transform.localPosition = new Vector3(0.0f, 0.0f, 100.0f);
-
             hitPoint.SetActive(false);
 
             // remove the colliders on our primitives
@@ -42,6 +44,7 @@ namespace Wacki {
             newMaterial.SetColor("_Color", color);
             pointer.GetComponent<MeshRenderer>().material = newMaterial;
             hitPoint.GetComponent<MeshRenderer>().material = newMaterial;
+
             // initialize concrete class
             Initialize();
             
@@ -50,7 +53,6 @@ namespace Wacki {
                 new GameObject().AddComponent<LaserPointerInputModule>();
             }
             
-
             LaserPointerInputModule.instance.AddController(this);
         }
 
@@ -61,25 +63,35 @@ namespace Wacki {
         }
 
         protected virtual void Initialize() { }
+
         public virtual void OnEnterControl(GameObject control) { }
         public virtual void OnExitControl(GameObject control) { }
-        abstract public bool ButtonDown();
-        abstract public bool ButtonUp();
+        
+        public abstract bool ButtonDown();
+        public abstract bool ButtonUp();
+        public abstract bool ButtonToggleClicked();
 
         protected virtual void Update()
         {
+            // check if user turns laser on/off and react accordingly
+            if (ButtonToggleClicked()) {
+                if (laserActive) { hideLaser(); }
+                else { showLaser(); }
+                Debug.Log("Laser state changed to: " + (laserActive ? "enabled" : "disabled"));
+            }
+
+            // don't do anything if the laser is disabled
+            if (!laserActive) { return; }
+
             Ray ray = new Ray(transform.position, transform.forward);
             RaycastHit hitInfo;
             bool bHit = Physics.Raycast(ray, out hitInfo);
 
             float distance = 100.0f;
-
-            if(bHit) {
-                distance = hitInfo.distance;
-            }
+            if (bHit) { distance = hitInfo.distance; }
 
             // ugly, but has to do for now
-            if(_distanceLimit > 0.0f) {
+            if (_distanceLimit > 0.0f) {
                 distance = Mathf.Min(distance, _distanceLimit);
                 bHit = true;
             }
@@ -87,7 +99,7 @@ namespace Wacki {
             pointer.transform.localScale = new Vector3(laserThickness, laserThickness, distance);
             pointer.transform.localPosition = new Vector3(0.0f, 0.0f, distance * 0.5f);
 
-            if(bHit) {
+            if (bHit) {
                 hitPoint.SetActive(true);
                 hitPoint.transform.localPosition = new Vector3(0.0f, 0.0f, distance);
             }
@@ -110,6 +122,21 @@ namespace Wacki {
             else
                 _distanceLimit = Mathf.Min(_distanceLimit, distance);
         }
-    }
 
+        public void showLaser() {
+            pointer.SetActive(true);
+            laserActive = true;
+        }
+
+        public void hideLaser() {
+            hitPoint.SetActive(false);
+            pointer.SetActive(false);
+            laserActive = false;
+        }
+
+        public bool isLaserActive() {
+            return laserActive;
+        }
+
+    } // end of namespace
 }
