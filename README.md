@@ -7,7 +7,8 @@ The goal is a laser pointer for a VR experience with HTC Vive using Unity and St
 To achieve this, some scripts had to be modified.  
 Also, this repository will only focus on the HTC Vive with SteamVR.  
 
-![](http://wacki.me/assets/posts/images/2016-06-vrgui/gui.png)
+![Preview Image 01](Images/Preview_01.jpg)
+![Preview Image 02](Images/Preview_02.jpg)
 
 
 <br/>
