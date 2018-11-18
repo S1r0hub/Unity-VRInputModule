@@ -2,6 +2,11 @@
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
+/**
+ * Hint:
+ * If this is not working at all (e.g. the Process function is not called)
+ * ensure that you have disabled the SteamVR Player Prefab "Input Module"!
+ */
 namespace Wacki {
 
     public class LaserPointerInputModule : BaseInputModule {
@@ -36,6 +41,7 @@ namespace Wacki {
             }
 
             _instance = this;
+            Debug.Log("LaserPointerInputModule instance created");
         }
 
         protected override void Start()
@@ -58,12 +64,14 @@ namespace Wacki {
             foreach(Canvas canvas in canvases) {
                 canvas.worldCamera = UICamera;
             }
+
+            Debug.Log("LaserPointerInputModule instance prepared");
         }
 
         public void AddController(IUILaserPointer controller)
         {
             _controllerData.Add(controller, new ControllerData());
-            Debug.Log("Laser pointer registered!");
+            Debug.Log("Laser pointer registered");
         }
 
         public void RemoveController(IUILaserPointer controller)
@@ -97,6 +105,7 @@ namespace Wacki {
 
         public override void Process()
         {
+            //Debug.Log("InputModule Process call...");
             raycaster.eventMask = layerMask;
 
             foreach(var pair in _controllerData) {
@@ -154,10 +163,13 @@ namespace Wacki {
 
                     // update current pressed if the curser is over an element
                     if(data.currentPoint != null) {
+
                         data.currentPressed = data.currentPoint;
                         data.pointerEvent.current = data.currentPressed;
+
                         GameObject newPressed = ExecuteEvents.ExecuteHierarchy(data.currentPressed, data.pointerEvent, ExecuteEvents.pointerDownHandler);
                         ExecuteEvents.Execute(controller.gameObject, data.pointerEvent, ExecuteEvents.pointerDownHandler);
+
                         if (newPressed == null) {
                             // some UI elements might only have click handler and not pointer down handler
                             newPressed = ExecuteEvents.ExecuteHierarchy(data.currentPressed, data.pointerEvent, ExecuteEvents.pointerClickHandler);
@@ -188,7 +200,7 @@ namespace Wacki {
                         data.pointerEvent.pointerDrag = data.currentPressed;
                         data.currentDragging = data.currentPressed;
                     }
-                }// button down end
+                } // button down end
 
 
                 if(controller.ButtonUp()) {
@@ -210,10 +222,8 @@ namespace Wacki {
                         data.pointerEvent.pointerPress = null;
                         data.currentPressed = null;
                     }
-                }
+                } // button up end
 
-
-                
 
                 // drag handling
                 if(data.currentDragging != null) {
@@ -221,7 +231,6 @@ namespace Wacki {
                     ExecuteEvents.Execute(data.currentDragging, data.pointerEvent, ExecuteEvents.dragHandler);
                     ExecuteEvents.Execute(controller.gameObject, data.pointerEvent, ExecuteEvents.dragHandler);
                 }
-
 
 
                 // update selected element for keyboard focus

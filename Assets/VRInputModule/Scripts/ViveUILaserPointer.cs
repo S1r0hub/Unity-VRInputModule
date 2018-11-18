@@ -30,12 +30,16 @@ namespace Wacki {
 
         public override bool ButtonDown() {
             if (!available()) { return false; }
-            return triggerButton.GetStateDown(controller.handType);
+            bool state = triggerButton.GetStateDown(controller.handType);
+            //Debug.Log("ButtonDown event (" + state + ")");
+            return state;
         }
 
         public override bool ButtonUp() {
             if (!available()) { return false; }
-            return triggerButton.GetStateUp(controller.handType);
+            bool state = triggerButton.GetStateUp(controller.handType);
+            //Debug.Log("ButtonUp event (" + state + ")");
+            return state;
         }
         
         public override void OnEnterControl(GameObject control) {
