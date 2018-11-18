@@ -74,10 +74,10 @@ namespace Wacki {
         protected virtual void Update()
         {
             // check if user turns laser on/off and react accordingly
-            if (ButtonToggleClicked()) {
+            if (!laserAlwaysOn && ButtonToggleClicked()) {
                 if (laserActive) { hideLaser(); }
                 else { showLaser(); }
-                Debug.Log("Laser state changed to: " + (laserActive ? "enabled" : "disabled"));
+                Debug.Log("Laser pointer " + (laserActive ? "enabled" : "disabled"));
             }
 
             // don't do anything if the laser is disabled
