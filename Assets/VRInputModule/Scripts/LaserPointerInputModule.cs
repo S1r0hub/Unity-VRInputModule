@@ -211,7 +211,7 @@ namespace Wacki {
 
 
                 if(controller.ButtonUp()) {
-                    ClearSelection();
+                    ClearSelection(); // clear selection so that the objects dont stay in highlighted color
 
                     if(data.currentDragging != null) {
                         data.pointerEvent.current = data.currentDragging;
@@ -232,6 +232,7 @@ namespace Wacki {
                         data.pointerEvent.pointerPress = null;
                         data.currentPressed = null;
                     }
+
                 } // button up end
 
 

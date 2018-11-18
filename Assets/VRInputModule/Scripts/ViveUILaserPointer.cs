@@ -48,7 +48,6 @@ namespace Wacki {
         }
 
         public override void OnExitControl(GameObject control) {
-            Debug.Log("Exit Control!");
             if (!available()) { return; }
             // ToDo: haptic pulse
         }
