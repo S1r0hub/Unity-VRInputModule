@@ -39,7 +39,7 @@ After that, you can add the `ViveUILaserPointer` script to the desired controlle
 
 <br/>
 
-# Possible Issues
+# Possible Issues (+Fix)
 
 > I created a new scene and added the script but nothing is working!
 
@@ -49,10 +49,26 @@ there is no `EventSystem` component attached to the game object you have the `La
 Another one could be that there are multiple `EventSystem` components in the scene  
 that prevent the call of the `Process` function.  
 
+<br/>
+
+> I created a controller pickup functionality, but changing items immediately removes the selected one?
+
+I had this problem and searched for a solution about half an hour or longer...  
+For me, it was no bug in my code. It was simply caused by the property **Hide Hand On Attach**.  
+This property is provided by Valves `Interactable` script and seems to cause problems switching items.  
+I suggest to hide both, the controller and the hand to avoid such bugs.  
+
 
 <br/>
 
 # Updates
+
+## Status 22.11.2018
+
+- fix: visible hit point (issue was just the size, no bug)
+- added SteamVR pickup functionality (new scripts: ViveUILaserPointerPickup and UILaserPointerPickup)
+  - UILaserPointerPickup does the exact same as UILaserPointer BUT does not use the "Update" function (only difference)
+- added prefabs/examples for the pickup functionality
 
 ## Status 18.11.2018
 
@@ -64,3 +80,44 @@ that prevent the call of the `Process` function.
 
 The code and functionality is currently not tested.  
 Testing and improvements will follow in some days.  
+
+
+<br/>
+
+# How It Works
+(At least how I think it works from inspecting the code... - correct me please if I am wrong)
+
+First, the laser pointer will cast a ray.  
+To cast the ray, we use `Physics.Raycast`.  
+As you can read in the documentation, this casts a ray `against all colliders in the scene`.  
+This type of ray does **not** hit any UI element.  
+It only hits/detects objects that have a collider component added to them.  
+But we don't really want a Collider for UI Elements.  
+They could block other objects in VR.  
+
+So how are we detecting if we hit a UI-Element?  
+
+The first ray is only to detect/set the correct distance to objects in the world we hit.  
+It has nothing to do with functionality on the user interface.  
+To detect hits with UI elements, there is **another ray**.  
+This ray is casted different to the previous one.  
+To cast it, we take the EventSystem from the `BaseInputModule` and use [`EventSystem.RaycastAll`](https://docs.unity3d.com/ScriptReference/EventSystems.EventSystem.RaycastAll.html).  
+As you can read in the docs, it casts a ray `into the scene using all configured` [`BaseRaycasters`](https://docs.unity3d.com/ScriptReference/EventSystems.BaseRaycaster.html).  
+And as you can read there as well, default Raycasters are `PhysicsRaycaster, Physics2DRaycaster, GraphicRaycaster`.  
+
+Calling the beforementioned method requires a `PointerEventData` to be passed.  
+The [position](https://docs.unity3d.com/ScriptReference/EventSystems.PointerEventData-position.html) of this data (**pointerEvent.position**) is set by us using a self-created **UICamera**.  
+This camera is set for each canvas in the world to be the `Event Camera` or also known as [**Canvas.worldCamera**](https://docs.unity3d.com/ScriptReference/Canvas-worldCamera.html).  
+Having a look at the docs as well tells us the following about it:  
+`Also used as the Camera that events will be sent through for a World Space [[Canvas].).`  
+As we always make this camera look at the same as our laser points at,  
+we can simply use the center of what the camera is seeing as done in this line of code:  
+```
+data.pointerEvent.position = new Vector2(UICamera.pixelWidth * 0.5f, UICamera.pixelHeight * 0.5f);
+```
+As a result, we can get the correct UI element hit by the ray.  
+We then simply use [`BaseInputModule.FindFirstRaycast`](https://docs.unity3d.com/ScriptReference/EventSystems.BaseInputModule.FindFirstRaycast.html) to get the first *valid* raycast result.  
+
+After that, we check if the hit distance is less than the distance we got by the first raycast and update the length of the laser accordingly.  
+We then handle a bunch of events. For example the `HandlePointerExitAndEnter` event.  
+Depending on the laser inputs (toggle button pressed...) we use `ExecuteEvents` to notify affected game objects about events like pointer down, up, click or drag.  
