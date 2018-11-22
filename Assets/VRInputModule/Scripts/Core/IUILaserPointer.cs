@@ -4,10 +4,11 @@
 namespace Wacki {
     abstract public class IUILaserPointer : MonoBehaviour {
 
+        public Transform laserOrigin;
+        public Color color;
         public float laserThickness = 0.002f;
         public float laserHitScale = 0.02f;
         public bool laserAlwaysOn = false;
-        public Color color;
 
         private GameObject hitPoint;
         private GameObject pointer;
@@ -56,6 +57,16 @@ namespace Wacki {
             LaserPointerInputModule.instance.AddController(this);
         }
 
+        private void OnDrawGizmos() {
+         
+            // show the laser origin
+            if (laserOrigin) {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(laserOrigin.position, 0.01f);
+                Gizmos.DrawRay(laserOrigin.position, transform.forward * 0.1f);
+            }
+        }
+
         void OnDestroy()
         {
             if(LaserPointerInputModule.instance != null)
@@ -83,7 +94,12 @@ namespace Wacki {
             // don't do anything if the laser is disabled
             if (!laserActive) { return; }
 
-            Ray ray = new Ray(transform.position, transform.forward);
+            // use the origin transform position if provided
+            Vector3 origin_pos = transform.position;
+            if (laserOrigin) { origin_pos = laserOrigin.position; }
+
+            // create and cast the ray
+            Ray ray = new Ray(origin_pos, transform.forward);
             RaycastHit hitInfo;
             bool bHit = Physics.Raycast(ray, out hitInfo);
 
@@ -96,12 +112,14 @@ namespace Wacki {
                 bHit = true;
             }
 
+            // scale and position the laser "ray"
             pointer.transform.localScale = new Vector3(laserThickness, laserThickness, distance);
-            pointer.transform.localPosition = new Vector3(0.0f, 0.0f, distance * 0.5f);
+            pointer.transform.position = ray.origin + distance * 0.5f * ray.direction;
 
+            // position the hit point
             if (bHit) {
                 hitPoint.SetActive(true);
-                hitPoint.transform.localPosition = new Vector3(0.0f, 0.0f, distance);
+                hitPoint.transform.position = ray.origin + distance * ray.direction;
             }
             else {
                 hitPoint.SetActive(false);
