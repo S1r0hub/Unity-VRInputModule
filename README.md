@@ -1,4 +1,4 @@
-# Unity-VRPointerVive
+# Unity Virtual Reality Pointer for HTC Vive using SteamVR 2.0
 
 This repository is based on the following:  
 https://github.com/wacki/Unity-VRInputModule
