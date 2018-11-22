@@ -49,6 +49,13 @@ there is no `EventSystem` component attached to the game object you have the `La
 Another one could be that there are multiple `EventSystem` components in the scene  
 that prevent the call of the `Process` function.  
 
+> I created a controller pickup functionality, but changing items immediately removes the selected one?
+
+I had this problem and searched for a solution about half an hour or longer...  
+For me, it was no bug in my code. It was simply caused by the property **Hide Hand On Attach**.  
+This property is provided by Valves `Interactable` script and seems to cause problems switching items.  
+I suggest to hide both, the controller and the hand to avoid such bugs.  
+
 
 <br/>
 
