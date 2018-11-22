@@ -39,7 +39,7 @@ After that, you can add the `ViveUILaserPointer` script to the desired controlle
 
 <br/>
 
-# Possible Issues
+# Possible Issues (+Fix)
 
 > I created a new scene and added the script but nothing is working!
 
@@ -48,6 +48,8 @@ One important thing that could be responsible for this behaviour is that
 there is no `EventSystem` component attached to the game object you have the `LaserPointerInputModule` attached to.  
 Another one could be that there are multiple `EventSystem` components in the scene  
 that prevent the call of the `Process` function.  
+
+<br/>
 
 > I created a controller pickup functionality, but changing items immediately removes the selected one?
 
