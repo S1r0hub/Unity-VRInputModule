@@ -20,7 +20,7 @@ Also, this repository will only focus on the HTC Vive with SteamVR.
 
 If you are using the prefab provided by Valve,  
 simply add the `LaserPointerInputModule` script to the game object `InputModule` inside the "Player" prefab.  
-Then drag the laser pointer pickup prefab (`/Prefabs/Pickup/Pointer/PointerPickup`) into the scene.  
+Then drag the laser pointer pickup prefab (`Assets/VRInputModule/Prefabs/Pickup/Pointer/PointerPickup`) into the scene.  
 
 ## 2. Option: Using SteamVR "Player" Prefab
 
