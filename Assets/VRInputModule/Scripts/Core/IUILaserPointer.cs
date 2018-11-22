@@ -1,12 +1,19 @@
 ﻿using UnityEngine;
 
 
+/**
+ * Initial code by github.com/wacki.
+ * 
+ * Modified by github.com/S1r0hub.
+ * Updated: 2018/11/22
+ */
 namespace Wacki {
+
     abstract public class IUILaserPointer : MonoBehaviour {
 
         public Transform laserOrigin;
         public Color color;
-        public float laserThickness = 0.002f;
+        public float laserThickness = 0.005f;
         public float laserHitScale = 0.02f;
         public bool laserAlwaysOn = false;
 
@@ -82,8 +89,17 @@ namespace Wacki {
         public abstract bool ButtonUp();
         public abstract bool ButtonToggleClicked();
 
-        protected virtual void Update()
-        {
+        protected virtual void Update() {
+            UpdateCall();
+        }
+
+        /**
+         * Performs laser update.
+         * Using raycast to detect hit and showing it.
+         * Moved to a separate method to be called from other methods as well.
+         */
+        protected virtual void UpdateCall() {
+
             // check if user turns laser on/off and react accordingly
             if (!laserAlwaysOn && ButtonToggleClicked()) {
                 if (laserActive) { hideLaser(); }
@@ -98,7 +114,7 @@ namespace Wacki {
             Vector3 origin_pos = transform.position;
             if (laserOrigin) { origin_pos = laserOrigin.position; }
 
-            // create and cast the ray
+            // create and cast the ray that hits colliders (does not hit UI elements)
             Ray ray = new Ray(origin_pos, transform.forward);
             RaycastHit hitInfo;
             bool bHit = Physics.Raycast(ray, out hitInfo);

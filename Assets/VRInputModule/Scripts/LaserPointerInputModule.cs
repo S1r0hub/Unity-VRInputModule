@@ -84,8 +84,13 @@ namespace Wacki {
 
         protected void UpdateCameraPosition(IUILaserPointer controller)
         {
-            UICamera.transform.position = controller.transform.position;
-            UICamera.transform.rotation = controller.transform.rotation;
+            // use the laser origin if the user set it
+            Transform updateTransform = controller.transform;
+            if (controller.laserOrigin) { updateTransform = controller.laserOrigin; }
+
+            // update the camera position and rotation
+            UICamera.transform.position = updateTransform.position;
+            UICamera.transform.rotation = updateTransform.rotation;
         }
 
         // clear the current selection
@@ -117,9 +122,13 @@ namespace Wacki {
 
                 // skip raycasting and events in general
                 // if the layer is currently not enabled
-                if (!controller.isLaserActive()) { continue; }
+                if (!controller.isLaserActive()) {
+                    Debug.Log("Sel go: " + base.eventSystem.currentSelectedGameObject);
+                    ClearSelection();
+                    continue;
+                }
 
-                // Test if UICamera is looking at a GUI element
+                // test if UICamera is looking at a GUI element
                 UpdateCameraPosition(controller);
 
                 if(data.pointerEvent == null)

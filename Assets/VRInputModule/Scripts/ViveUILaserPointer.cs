@@ -12,10 +12,8 @@ namespace Wacki {
     public class ViveUILaserPointer : IUILaserPointer {
 
         public Hand controller;
-
         public SteamVR_Action_Boolean toggleButton;
         public SteamVR_Action_Boolean triggerButton;
-        private SteamVR_Action_Boolean noneAction;
 
         private bool lastToggleState = false;
 
