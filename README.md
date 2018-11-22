@@ -15,7 +15,14 @@ Also, this repository will only focus on the HTC Vive with SteamVR.
 
 # How To Setup
 
-## 1. Option: Using SteamVR "Player" Prefab
+## 1. Option: SteamVR "Player" Prefab + Laser Pointer Pickup Prefab
+*(suggested)*  
+
+If you are using the prefab provided by Valve,  
+simply add the `LaserPointerInputModule` script to the game object `InputModule` inside the "Player" prefab.  
+Then drag the laser pointer pickup prefab (`/Prefabs/Pickup/Pointer/PointerPickup`) into the scene.  
+
+## 2. Option: Using SteamVR "Player" Prefab
 
 If you are using the prefab provided by Valve,  
 simply add the `LaserPointerInputModule` script to the game object `InputModule` inside the "Player" prefab.  
@@ -29,7 +36,7 @@ Their name is either `LeftHand` or `RightHand`.
 You can simply add the script to any game object.  
 But something **you always have to do** is selecting the desired controller on the script!  
 
-## 2. Option: Own Setup
+## 3. Option: Own Setup
 
 Ensure you use Valve's `Hand` script for your controllers  
 and that you add the `LaserPointerInputModule` script to the game object that holds an `EventSystem` component!  
@@ -121,3 +128,9 @@ We then simply use [`BaseInputModule.FindFirstRaycast`](https://docs.unity3d.com
 After that, we check if the hit distance is less than the distance we got by the first raycast and update the length of the laser accordingly.  
 We then handle a bunch of events. For example the `HandlePointerExitAndEnter` event.  
 Depending on the laser inputs (toggle button pressed...) we use `ExecuteEvents` to notify affected game objects about events like pointer down, up, click or drag.  
+
+
+<br/>
+
+# ToDo
+- Fix: UI-Element still selected after laser pointer is deactivated while pointing at it
